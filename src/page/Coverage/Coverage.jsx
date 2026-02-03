@@ -43,6 +43,7 @@ const Coverage = () => {
             </svg>
             <input name="location" type="search" className="grow" placeholder="Search" />
           </label>
+            <button  className="btn btn-primary">Serach</button>
         </form>
       </div>
       <div className=" border-2 h-[800px]">
