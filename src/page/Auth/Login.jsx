@@ -1,5 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import useData from "../../allHooks/useData";
+import Google from "../../components/Google";
 
 const Login = () => {
   const {
@@ -7,9 +9,14 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+const {singInUser} = useData()
   const submiteForm = (data) => {
-    console.log(data);
+    singInUser(data.email,data.password).then((userCredential) => {
+        console.log(userCredential.user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
   return (
     <div>
@@ -46,7 +53,7 @@ const Login = () => {
           {errors.password?.type === "pattern" && (
             <p className="text-red-500 font-bold">
               This one enforces 1 uppercase, 1 lowercase, 1 number, 1 special
-              character, plus a minimum length (you can change it).
+              character, plus a minimum length 8
             </p>
           )}
           <div>
@@ -54,6 +61,7 @@ const Login = () => {
           </div>
           <button className="btn btn-neutral mt-4">Login</button>
         </form>
+        <Google/>
       </div>
     </div>
   );
