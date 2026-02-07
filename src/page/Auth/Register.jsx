@@ -2,25 +2,40 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useData from "../../allHooks/useData";
 import Google from "../../components/Google";
+import {Link, useLocation, useNavigate} from 'react-router-dom'
+import axios from "axios";
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
 const Register = () => {
+const location = useLocation();
+const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const { registerUserData } =useData()
+  const { registerUserData,updateProfileImage } = useData();
   const registerSubmit = (data) => {
-    console.log(data);
+    console.log(data.photo[0]);
+    const photoDataUrl = data.photo[0]
 
     // ✅ correct arguments
     registerUserData(data.email, data.password)
-      .then((userCredential) => {
-        console.log(userCredential.user);
+      .then(() => {
+        const formData = new FormData()
+        formData.append('image',photoDataUrl)
+        axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imagedb}`,formData)
+        .then((res)=> {
+          console.log(res.data.data.url)
+          const userFromFile = {
+            displayName:data.userName,
+            photoURL:res.data.data.url
+          }
+          updateProfileImage(userFromFile).then(()=>console.log("image uploaded"))
+        })
+        navigate(location?.state || '/')
       })
       .catch((error) => {
         console.log(error.message);
@@ -33,7 +48,6 @@ const Register = () => {
 
       <div className="card-body">
         <form onSubmit={handleSubmit(registerSubmit)} className="fieldset">
-
           {/* User Name */}
           <label className="label">User Name</label>
           <input
@@ -42,6 +56,17 @@ const Register = () => {
             className="input"
             placeholder="Your name"
             name="userName"
+          />
+          {errors.userName && (
+            <p className="text-red-500 font-bold">User name is required</p>
+          )}
+          {/* Image file */}
+          <label className="label">User Name</label>
+          <input
+            {...register("photo", { required: true })}
+            type="file"
+            className="file-input"
+            name="photo"
           />
           {errors.userName && (
             <p className="text-red-500 font-bold">User name is required</p>
@@ -78,14 +103,24 @@ const Register = () => {
 
           {errors.password?.type === "pattern" && (
             <p className="text-red-500 font-bold">
-              Must contain 1 uppercase, 1 lowercase, 1 number, 1 special character
-              and be at least 8 characters
+              Must contain 1 uppercase, 1 lowercase, 1 number, 1 special
+              character and be at least 8 characters
             </p>
           )}
 
           <button className="btn btn-neutral mt-4">Register</button>
         </form>
-        <Google/>
+        <Google />
+        <p className="mt-4 text-center">
+          Already have an account?{" "}
+          <Link
+            state={location?.state}
+            to="/login"
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Login here
+          </Link>
+        </p>
       </div>
     </div>
   );

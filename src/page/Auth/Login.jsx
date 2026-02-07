@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useData from "../../allHooks/useData";
 import Google from "../../components/Google";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const {
@@ -9,10 +10,14 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-const {singInUser} = useData()
+  const location =useLocation()
+  const navegation =useNavigate()
+  const { singInUserData } = useData();
   const submiteForm = (data) => {
-    singInUser(data.email,data.password).then((userCredential) => {
+    singInUserData(data.email, data.password)
+      .then((userCredential) => {
         console.log(userCredential.user);
+        navegation(location?.state || '/')
       })
       .catch((error) => {
         console.log(error.message);
@@ -26,11 +31,10 @@ const {singInUser} = useData()
           <label className="label">Email</label>
           <input
             name="email"
-            {...register("email",{required:true})}
+            {...register("email", { required: true })}
             type="email"
             className="input"
             placeholder="Email"
-            
           />
           {errors.email?.type === "required" && (
             <p className="text-red-500 font-bold"> email in required</p>
@@ -61,7 +65,17 @@ const {singInUser} = useData()
           </div>
           <button className="btn btn-neutral mt-4">Login</button>
         </form>
-        <Google/>
+        <p className="mt-4 text-center">
+           Have an account?{" "}
+          <Link
+            state={location?.state}
+            to="/register"
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            Register here
+          </Link>
+        </p>
+        <Google />
       </div>
     </div>
   );

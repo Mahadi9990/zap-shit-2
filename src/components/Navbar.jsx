@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import useData from "../allHooks/useData";
 
 export default function Navbar() {
   const [theme, setTheme] = useState("light");
+  const {user,singOutUser} =useData()
+  const navigate =useNavigate()
+
+  const handleSingOutUser =()=>{
+    singOutUser().then((res)=>{
+      console.log(res,"Log out successfully")
+      navigate("/login")
+    })
+  }
 
   // Apply theme to <html>
   useEffect(() => {
@@ -13,16 +23,18 @@ export default function Navbar() {
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
+  
+
   const links = (
     <>
       <li>
-        <NavLink to='/'>Home</NavLink>
+        <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to='about'>About</NavLink>
+        <NavLink to="about">About</NavLink>
       </li>
       <li>
-        <NavLink to='/coverage' >Coverage</NavLink>
+        <NavLink to="/coverage">Coverage</NavLink>
       </li>
     </>
   );
@@ -55,7 +67,7 @@ export default function Navbar() {
               {links}
             </ul>
           </div>
-          <NavLink to='/' className="font-bold text-xl">
+          <NavLink to="/" className="font-bold text-xl">
             <Logo />
           </NavLink>
         </div>
@@ -66,7 +78,19 @@ export default function Navbar() {
           <button onClick={toggleTheme} className="btn btn-sm btn-outline">
             {theme === "light" ? "🌙 Dark" : "☀️ Light"}
           </button>
-          <a className="btn">Button</a>
+          
+          <Link to={"/beARider"} className="btn btn-success">
+            Be a rider
+          </Link>
+          {
+            user ?
+            <a onClick={handleSingOutUser} className="btn btn-success">
+            SingOut
+          </a>:
+            <Link to={"/login"} className="btn btn-success">
+            Login
+          </Link>
+          }
         </div>
       </div>
     </div>

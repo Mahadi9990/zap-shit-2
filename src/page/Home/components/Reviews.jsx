@@ -4,7 +4,6 @@ import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const Reviews = ({ reviewsData }) => {
-  console.log(reviewsData);
   return (
     <div>
       <Swiper
