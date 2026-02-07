@@ -5,15 +5,15 @@ import useData from "../allHooks/useData";
 
 export default function Navbar() {
   const [theme, setTheme] = useState("light");
-  const {user,singOutUser} =useData()
-  const navigate =useNavigate()
+  const { user, singOutUser } = useData();
+  const navigate = useNavigate();
 
-  const handleSingOutUser =()=>{
-    singOutUser().then((res)=>{
-      console.log(res,"Log out successfully")
-      navigate("/login")
-    })
-  }
+  const handleSingOutUser = () => {
+    singOutUser().then((res) => {
+      console.log(res, "Log out successfully");
+      navigate("/login");
+    });
+  };
 
   // Apply theme to <html>
   useEffect(() => {
@@ -23,7 +23,6 @@ export default function Navbar() {
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
-  
 
   const links = (
     <>
@@ -36,6 +35,19 @@ export default function Navbar() {
       <li>
         <NavLink to="/coverage">Coverage</NavLink>
       </li>
+    
+      {user ? 
+        <>
+          <li>
+            <NavLink to="/sendAPercel">Send-A-Percel</NavLink>
+          </li>
+          <li>
+            <NavLink to="/beARider">Be-A-Rider</NavLink>
+          </li>
+        </>
+       : 
+        ""
+      }
     </>
   );
   return (
@@ -78,19 +90,16 @@ export default function Navbar() {
           <button onClick={toggleTheme} className="btn btn-sm btn-outline">
             {theme === "light" ? "🌙 Dark" : "☀️ Light"}
           </button>
-          
-          <Link to={"/beARider"} className="btn btn-success">
-            Be a rider
-          </Link>
-          {
-            user ?
+
+          {user ? (
             <a onClick={handleSingOutUser} className="btn btn-success">
-            SingOut
-          </a>:
+              SingOut
+            </a>
+          ) : (
             <Link to={"/login"} className="btn btn-success">
-            Login
-          </Link>
-          }
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </div>
