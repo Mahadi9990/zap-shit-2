@@ -25,6 +25,7 @@ export const router = createBrowserRouter([
     },
     {
       path:'sendAPercel',
+      loader:()=>fetch('serviceCenters.json').then(res => res.json()),
       element:<PrivateRoute><SendAPersel/></PrivateRoute>
     },
     {

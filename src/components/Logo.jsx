@@ -1,8 +1,10 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 export default function Logo() {
   return (
-        <h1>Logo</h1>
+       <NavLink>
+        <h1 className="font-bold text-xl p-4">Logo</h1>
+       </NavLink>
   )
 }
