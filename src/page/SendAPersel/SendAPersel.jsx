@@ -1,14 +1,14 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router-dom";
 
 const SendAPersel = () => {
   const districtData = useLoaderData();
   const regions = districtData.map((i) => i.region);
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, control } = useForm();
   const uniqueRegion = [...new Set(regions)];
-  const selectedRegion = watch("region");
-  const selectedResiveRegion = watch("ResiveRegion");
+  const selectedRegion = useWatch({ control, name: "region" });
+  const selectedResiveRegion = useWatch({ control, name: "ResiveRegion" });
   const getDistrictsByRegion = (oneRegions) => {
     const allResions = districtData.filter(
       (item) => item.region === oneRegions,
@@ -18,6 +18,25 @@ const SendAPersel = () => {
   };
   const handleFormSubmit = (data) => {
     console.log(data);
+    const docoument = data.parcelType === "document";
+    const sameDistrict = data.district === data.ResiveDistrict;
+    const parcelWeight = Number(data.parcelWeight || 0);
+    let cost = 0;
+    if (docoument) {
+      cost = sameDistrict ? 60 : 80;
+    } else {
+      if (parcelWeight < 3) {
+        cost = sameDistrict ? 110 : 130;
+      } else {
+        const minCharge = sameDistrict ? 110 : 130;
+        const totalWeight = parcelWeight - 3;
+        const addCharge = sameDistrict
+          ? totalWeight * 40
+          : totalWeight * 40 + 40;
+        cost = minCharge + addCharge;
+      }
+    }
+    console.log(cost);
   };
   return (
     <div>
@@ -59,6 +78,7 @@ const SendAPersel = () => {
               type="number"
               className="input w-full"
               placeholder="parcel weight"
+              {...register("parcelWeight")}
             />
           </fieldset>
         </div>
@@ -153,7 +173,9 @@ const SendAPersel = () => {
                   placeholder="parcel weight"
                 />
                 <fieldset className="fieldset">
-                  <legend className="fieldset-legend  ">select Resive Region</legend>
+                  <legend className="fieldset-legend  ">
+                    select Resive Region
+                  </legend>
                   <select
                     defaultValue="Peak a region"
                     className="select w-full"
@@ -177,11 +199,13 @@ const SendAPersel = () => {
                     {...register("ResiveDistrict")}
                   >
                     <option disabled={true}>Peck a district</option>
-                    {getDistrictsByRegion(selectedResiveRegion).map((district) => (
-                      <option key={district} value={district}>
-                        {district}
-                      </option>
-                    ))}
+                    {getDistrictsByRegion(selectedResiveRegion).map(
+                      (district) => (
+                        <option key={district} value={district}>
+                          {district}
+                        </option>
+                      ),
+                    )}
                   </select>
                 </fieldset>
               </fieldset>
