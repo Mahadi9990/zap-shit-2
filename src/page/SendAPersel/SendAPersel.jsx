@@ -1,8 +1,13 @@
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router-dom";
+import Swal from "sweetalert2";
+import useAxious from "../../allHooks/useAxious";
+import useData from "../../allHooks/useData";
 
 const SendAPersel = () => {
+  const {user} =useData()
+  const sequareAxious = useAxious();
   const districtData = useLoaderData();
   const regions = districtData.map((i) => i.region);
   const { register, handleSubmit, control } = useForm();
@@ -36,7 +41,27 @@ const SendAPersel = () => {
         cost = minCharge + addCharge;
       }
     }
-    console.log(cost);
+    data.cost =cost
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You will be aggre with this ${cost}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Send",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        sequareAxious.post("/parcel", data).then((res) => {
+          console.log(res.data);
+          Swal.fire({
+            title: `${res.data.insertedId}`,
+            text: "Your file has been Send.",
+            icon: "success",
+          });
+        });
+      }
+    });
   };
   return (
     <div>
@@ -89,11 +114,13 @@ const SendAPersel = () => {
               <fieldset className="fieldset ">
                 <label className="label">Parcel weight</label>
                 <input
-                  type="number"
+                  type="email"
                   className="input w-full"
-                  placeholder="parcel weight"
+                  placeholder="SenderEmail"
+                  defaultValue={user.email}
+                  {...register("SenderEmail")}
                 />
-                <label className="label">Parcel weight</label>
+                <label className="label">SenderEmail</label>
                 <input
                   type="number"
                   className="input w-full"
@@ -114,7 +141,7 @@ const SendAPersel = () => {
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend  ">select region</legend>
                   <select
-                    defaultValue="Peak a region"
+                    defaultValue=""
                     className="select w-full"
                     {...register("region")}
                   >
@@ -131,7 +158,7 @@ const SendAPersel = () => {
                     select Districts
                   </legend>
                   <select
-                    defaultValue="Peck a district"
+                    defaultValue=""
                     className="select w-full"
                     {...register("district")}
                   >
@@ -177,7 +204,7 @@ const SendAPersel = () => {
                     select Resive Region
                   </legend>
                   <select
-                    defaultValue="Peak a region"
+                    defaultValue=""
                     className="select w-full"
                     {...register("ResiveRegion")}
                   >
@@ -194,7 +221,7 @@ const SendAPersel = () => {
                     select Resive Districts
                   </legend>
                   <select
-                    defaultValue="Peck a district"
+                    defaultValue=""
                     className="select w-full"
                     {...register("ResiveDistrict")}
                   >

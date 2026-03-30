@@ -44,6 +44,9 @@ export default function Navbar() {
           <li>
             <NavLink to="/beARider">Be-A-Rider</NavLink>
           </li>
+          <li>
+            <NavLink to="/dashBoard/allParcel">DashBoard</NavLink>
+          </li>
         </>
        : 
         ""

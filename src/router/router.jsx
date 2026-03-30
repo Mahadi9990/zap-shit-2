@@ -9,6 +9,9 @@ import Register from "../page/Auth/Register";
 import PrivateRoute from "../context/PrivateRoute";
 import BeARider from "../page/BeArider/BeARider";
 import SendAPersel from "../page/SendAPersel/SendAPersel";
+import Dashboard from "../layout/Dashboard";
+import AllParcel from "../page/Dashboard/AllParcel";
+import Item1 from "../page/Dashboard/Item1";
 
 
 export const router = createBrowserRouter([
@@ -51,6 +54,20 @@ export const router = createBrowserRouter([
       Component:Register
     }
   ]
+  },{
+    path:"/dashBoard",
+    element:<PrivateRoute><Dashboard/></PrivateRoute>,
+    children:[
+      {
+        path:'allParcel',
+        Component:AllParcel
+      },
+      {
+        path:'item1',
+        Component:Item1
+      }
+    ]
+    
   }
 ]);
 
