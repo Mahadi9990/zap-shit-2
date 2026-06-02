@@ -1,3 +1,4 @@
+import useAxious from "../allHooks/useAxious";
 import useData from "../allHooks/useData";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -5,12 +6,33 @@ const Google = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { googleSignIn } = useData();
+  const axiousSecure = useAxious();
 
   const handleGoogleSubmit = () => {
     googleSignIn()
       .then((result) => {
-        console.log(result.user);
-        navigate(location?.state || "/");
+        console.log("google sing in", result.user);
+        const userInfo = {
+          displayName: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL,
+        };
+        // set user on database
+
+        axiousSecure.post("/users", userInfo).then((res) => {
+          if (res.data.message === "email alreay on database") {
+            navigate(location.state?.from || "/", {
+              replace: true,
+            });
+            console.log("email already exits on data base and you throw on home page");
+          }
+          if (res.data.insertedId) {
+            navigate(location.state?.from || "/", {
+              replace: true,
+            });
+            console.log("user created on database from social");
+          }
+        });
       })
       .catch((error) => console.log(error.message));
   };

@@ -1,12 +1,13 @@
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxious from "../../allHooks/useAxious";
 import useData from "../../allHooks/useData";
 
 const SendAPersel = () => {
-  const {user} =useData()
+  const { user } = useData();
+  const navigate = useNavigate();
   const sequareAxious = useAxious();
   const districtData = useLoaderData();
   const regions = districtData.map((i) => i.region);
@@ -41,7 +42,7 @@ const SendAPersel = () => {
         cost = minCharge + addCharge;
       }
     }
-    data.cost =cost
+    data.cost = cost;
     Swal.fire({
       title: "Are you sure?",
       text: `You will be aggre with this ${cost}`,
@@ -54,6 +55,7 @@ const SendAPersel = () => {
       if (result.isConfirmed) {
         sequareAxious.post("/parcel", data).then((res) => {
           console.log(res.data);
+          navigate("/dashBoard/allParcel");
           Swal.fire({
             title: `${res.data.insertedId}`,
             text: "Your file has been Send.",
@@ -95,6 +97,7 @@ const SendAPersel = () => {
               type="text"
               className="input w-full"
               placeholder="Parcel name"
+              {...register("parcel_name")}
             />
           </fieldset>
           <fieldset className="fieldset ">
@@ -118,7 +121,7 @@ const SendAPersel = () => {
                   className="input w-full"
                   placeholder="SenderEmail"
                   defaultValue={user.email}
-                  {...register("SenderEmail")}
+                  {...register("senderEmail")}
                 />
                 <label className="label">SenderEmail</label>
                 <input

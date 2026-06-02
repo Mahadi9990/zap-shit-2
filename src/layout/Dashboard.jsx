@@ -1,8 +1,13 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
-import { FaSitemap } from "react-icons/fa";
+import { FaHistory, FaSitemap } from "react-icons/fa";
+import { SiRider } from "react-icons/si";
+import { MdManageAccounts } from "react-icons/md";
+import useRole from "../allHooks/useRole";
 
 const Dashboard = () => {
+  const {role} =useRole()
+  console.log("FromHoleRole :",role)
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -102,6 +107,47 @@ const Dashboard = () => {
 
             <li>
               <Link
+                to={"/dashBoard/history"}
+                className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                data-tip="payment history"
+              >
+                <FaHistory className="my-1.5 inline-block size-4" />
+
+                {/* <span className="is-drawer-close:hidden">Settings</span> */}
+                <span className="is-drawer-close:hidden">History</span>
+              </Link>
+            </li>
+            {role === "admin" && 
+              <>
+                <li>
+                  <Link
+                    to={"/dashBoard/riderApprovial"}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="riderApprovial"
+                  >
+                    <SiRider className="my-1.5 inline-block size-4" />
+
+                    <span className="is-drawer-close:hidden">
+                      RiderApprovial
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to={"/dashBoard/userMenagment"}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="userMenagment"
+                  >
+                    <MdManageAccounts className="my-1.5 inline-block size-4" />
+                    <span className="is-drawer-close:hidden">
+                      UserMenagment
+                    </span>
+                  </Link>
+                </li>
+              </>
+            }
+            <li>
+              <Link
                 to={"/dashBoard/item1"}
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                 data-tip="Item1"
@@ -109,11 +155,7 @@ const Dashboard = () => {
                 <FaSitemap className="my-1.5 inline-block size-4" />
 
                 {/* <span className="is-drawer-close:hidden">Settings</span> */}
-                <span
-                  className="is-drawer-close:hidden"
-                >
-                  Item1
-                </span>
+                <span className="is-drawer-close:hidden">Item1</span>
               </Link>
             </li>
           </ul>

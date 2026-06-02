@@ -17,7 +17,9 @@ const Login = () => {
     singInUserData(data.email, data.password)
       .then((userCredential) => {
         console.log(userCredential.user);
-        navegation(location?.state || '/')
+        navegation(location.state?.from || "/", {
+          replace: true,
+        });
       })
       .catch((error) => {
         console.log(error.message);

@@ -2,40 +2,65 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import useData from "../../allHooks/useData";
 import Google from "../../components/Google";
-import {Link, useLocation, useNavigate} from 'react-router-dom'
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import useAxious from "../../allHooks/useAxious";
 
 const passwordRegex =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
 
 const Register = () => {
-const location = useLocation();
-const navigate = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const axiousSecure = useAxious();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { registerUserData,updateProfileImage } = useData();
+  const { registerUserData, updateProfileImage } = useData();
   const registerSubmit = (data) => {
     console.log(data.photo[0]);
-    const photoDataUrl = data.photo[0]
+    const photoDataUrl = data.photo[0];
 
     // ✅ correct arguments
     registerUserData(data.email, data.password)
       .then(() => {
-        const formData = new FormData()
-        formData.append('image',photoDataUrl)
-        axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imagedb}`,formData)
-        .then((res)=> {
-          console.log(res.data.data.url)
-          const userFromFile = {
-            displayName:data.userName,
-            photoURL:res.data.data.url
-          }
-          updateProfileImage(userFromFile).then(()=>console.log("image uploaded"))
-        })
-        navigate(location?.state || '/')
+        const formData = new FormData();
+        formData.append("image", photoDataUrl);
+        axios
+          .post(
+            `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imagedb}`,
+            formData,
+          )
+          .then((res) => {
+            const photoUrl = res.data.data.url;
+
+            const userInfo = {
+              displayName: data.userName,
+              email: data.email,
+              photoURL: photoUrl,
+            };
+            // set user on database
+
+            axiousSecure.post("/users", userInfo).then((res) => {
+              if (res.data.insertedId) {
+                console.log("user created on database");
+              }
+            });
+
+            // set iamge on firebase
+            const userFromFile = {
+              displayName: data.userName,
+              photoURL: photoUrl,
+            };
+            updateProfileImage(userFromFile).then(() =>
+              console.log("image uploaded"),
+            );
+          });
+        navigate(location.state?.from || "/", {
+          replace: true,
+        });
       })
       .catch((error) => {
         console.log(error.message);

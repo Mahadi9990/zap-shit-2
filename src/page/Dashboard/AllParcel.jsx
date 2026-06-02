@@ -5,11 +5,12 @@ import useAxious from "../../allHooks/useAxious";
 import { FaEdit } from "react-icons/fa";
 import { FaMagnifyingGlass, FaRegTrashCan } from "react-icons/fa6";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 export default function AllParcel() {
   const { user } = useData();
   const axious = useAxious();
-  const { data: parcels = [],refetch } = useQuery({
+  const { data: parcels = [], refetch } = useQuery({
     queryKey: ["myParcel", user?.email],
     queryFn: async () => {
       const res = await axious.get(`/parcel?email=${user.email}`);
@@ -28,17 +29,16 @@ export default function AllParcel() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed)
-        axious.delete(`/parcel/${id}`)
-      .then((res)=>{
-        if(res.data.deletedCount){
-          refetch()
-          Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
-            icon: "success",
-          });
-        }
-      })
+        axious.delete(`/parcel/${id}`).then((res) => {
+          if (res.data.deletedCount) {
+            refetch();
+            Swal.fire({
+              title: "Deleted!",
+              text: "Your file has been deleted.",
+              icon: "success",
+            });
+          }
+        });
     });
   };
   return (
@@ -63,8 +63,16 @@ export default function AllParcel() {
                 <tr key={item._id}>
                   <th>{index + 1}</th>
                   <th>{item._id}</th>
-                  <td>{item.SenderEmail}</td>
-                  <td>{item.status}</td>
+                  <td>{item.senderEmail}</td>
+                  <td>
+                    {item.payment_status === "paid" ? (
+                      <span className="text-green-400">Paid</span>
+                    ) : (
+                      <Link to={`/dashBoard/payment/${item._id}`}>
+                        <button className="btn btn-success">Pay</button>
+                      </Link>
+                    )}
+                  </td>
                   <td>{item.createdAt}</td>
                   <td>
                     <button className="p-4 rounded-md hover:bg-red-500">
