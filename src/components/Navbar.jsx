@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import useData from "../allHooks/useData";
+import useRole from "../allHooks/useRole";
 
 export default function Navbar() {
   const [theme, setTheme] = useState("light");
   const { user, singOutUser } = useData();
   const navigate = useNavigate();
+  const { role } = useRole();
 
   const handleSingOutUser = () => {
     singOutUser().then((res) => {
@@ -35,22 +37,24 @@ export default function Navbar() {
       <li>
         <NavLink to="/coverage">Coverage</NavLink>
       </li>
-    
-      {user ? 
-        <>
+
+          {role === "user" && (<>
           <li>
             <NavLink to="/sendAPercel">Send-A-Percel</NavLink>
           </li>
-          <li>
-            <NavLink to="/beARider">Be-A-Rider</NavLink>
-          </li>
+            <li>
+              <NavLink to="/beARider">Be-A-Rider</NavLink>
+            </li>
+          </>)}
+      {user ? (
+        <>
           <li>
             <NavLink to="/dashBoard/allParcel">DashBoard</NavLink>
           </li>
         </>
-       : 
+      ) : (
         ""
-      }
+      )}
     </>
   );
   return (
@@ -83,7 +87,7 @@ export default function Navbar() {
             </ul>
           </div>
           <div className="">
-            <Logo/>
+            <Logo />
           </div>
         </div>
         <div className="navbar-center hidden lg:flex">

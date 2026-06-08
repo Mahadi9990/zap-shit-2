@@ -9,21 +9,21 @@ const PaymentSuccess = () => {
   const axios = useAxious();
   useEffect(() => {
     if (sessionId) {
-      axios.patch(`/payment-success?session_id=${sessionId}`).then((res) => {
+      axios.patch(`/payment-success?session_id=${sessionId}` ).then((res) => {
         setpaymentInfo({
-          parcelTrangtionId: res.data.trangtionId,
-          trackingId: res.data.paymentId,
+          trackingId: res.data.trackingId,
+          paymentId: res.data.paymentId,
         });
       });
     }
-  }, [sessionId, axios]);
+  }, [sessionId, axios,paymentInfo]);
   return (
     <div>
       <h1>Payment Success</h1>
 
-      <h2>Tracking ID: {paymentInfo?.parcelTrangtionId}</h2>
+      <h2>trackingId ID: {paymentInfo?.trackingId}</h2>
 
-      <h2>Transaction ID: {paymentInfo?.trackingId}</h2>
+      <h2>paymentId ID: {paymentInfo?.paymentId}</h2>
     </div>
   );
 };

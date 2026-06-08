@@ -19,6 +19,10 @@ import PaymentHistory from "../page/Dashboard/PaymentHistory/PaymentHistory";
 import RiderApprovial from "../page/Dashboard/RiderApprovial/RiderApprovial";
 import UserManegment from "../page/Dashboard/UserManegment/UserManegment";
 import AdminRoute from "../context/AdminRoute";
+import RiderRoute from "../context/RiderRoute";
+import AssianRider from "../page/Dashboard/AssianRider/AssianRider";
+import AdminAndRider from "../context/AdminAndRider";
+import OnlyRiderCanSaw from "../page/Dashboard/RiderShowPage/OnlyRiderCanSaw";
 
 export const router = createBrowserRouter([
   {
@@ -33,18 +37,18 @@ export const router = createBrowserRouter([
         path: "beARider",
         loader: () => fetch("serviceCenters.json").then((res) => res.json()),
         element: (
-          <PrivateRoute>
+          <AdminAndRider>
             <BeARider />
-          </PrivateRoute>
+          </AdminAndRider>
         ),
       },
       {
         path: "sendAPercel",
         loader: () => fetch("serviceCenters.json").then((res) => res.json()),
         element: (
-          <PrivateRoute>
+          <AdminAndRider>
             <SendAPersel />
-          </PrivateRoute>
+          </AdminAndRider>
         ),
       },
       {
@@ -89,10 +93,6 @@ export const router = createBrowserRouter([
         Component: PaymentHistory,
       },
       {
-        path: "item1",
-        Component: Item1,
-      },
-      {
         path: "payment/:paymentId",
         Component: Payment,
       },
@@ -118,6 +118,22 @@ export const router = createBrowserRouter([
           <AdminRoute>
             <UserManegment />
           </AdminRoute>
+        ),
+      },
+      {
+        path: "assianRider",
+        element: (
+          <AdminRoute>
+            <AssianRider />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "RiderCanSee",
+        element: (
+          <RiderRoute>
+            <OnlyRiderCanSaw />
+          </RiderRoute>
         ),
       },
     ],

@@ -4,6 +4,7 @@ import { FaHistory, FaSitemap } from "react-icons/fa";
 import { SiRider } from "react-icons/si";
 import { MdManageAccounts } from "react-icons/md";
 import useRole from "../allHooks/useRole";
+import { MdTwoWheeler } from "react-icons/md";
 
 const Dashboard = () => {
   const {role} =useRole()
@@ -134,6 +135,18 @@ const Dashboard = () => {
                 </li>
                 <li>
                   <Link
+                    to={"/dashBoard/assianRider"}
+                    className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                    data-tip="AssianRider"
+                  >
+                    <MdTwoWheeler className="my-1.5 inline-block size-4" />
+                    <span className="is-drawer-close:hidden">
+                      AssianRider
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to={"/dashBoard/userMenagment"}
                     className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                     data-tip="userMenagment"
@@ -146,18 +159,20 @@ const Dashboard = () => {
                 </li>
               </>
             }
-            <li>
+           {role === 'rider'&& (
+             <li>
               <Link
-                to={"/dashBoard/item1"}
+                to={"/dashBoard/RiderCanSee"}
                 className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                data-tip="Item1"
+                data-tip="RiderCanSee"
               >
                 <FaSitemap className="my-1.5 inline-block size-4" />
 
                 {/* <span className="is-drawer-close:hidden">Settings</span> */}
-                <span className="is-drawer-close:hidden">Item1</span>
+                <span className="is-drawer-close:hidden">Rider Can see</span>
               </Link>
             </li>
+           )}
           </ul>
         </div>
       </div>

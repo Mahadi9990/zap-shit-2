@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useLoaderData } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -9,7 +9,6 @@ const BeARider = () => {
   const { user } = useData();
   // const navigate = useNavigate();
   const sequareAxious = useAxious();
-  const [towRiderError, settowRiderError] = useState(null);
   const districtData = useLoaderData();
   const regions = districtData.map((i) => i.region);
   const { register, handleSubmit, control } = useForm();
@@ -24,7 +23,7 @@ const BeARider = () => {
   };
   const handleFormSubmit = (data) => {
     console.log(data);
-    
+
     Swal.fire({
       title: "Are you sure?",
       text: `You will be aggre to rider`,
@@ -35,17 +34,20 @@ const BeARider = () => {
       confirmButtonText: "Send",
     }).then((result) => {
       if (result.isConfirmed) {
-        sequareAxious.post(`/riders`, data).then((res) => {
-          console.log(res.data);
-          if(res.data.message === 'rider alreay on database'){
-            settowRiderError(res.data.message)
+        sequareAxious.post("/riders", data).then((res) => {
+          if (res.data.message === "rider alreay on database") {
+            Swal.fire({
+              icon: "error",
+              title: "Application Failed",
+              text: res.data.message,
+            });
+          } else {
+            Swal.fire({
+              icon: "success",
+              title: "Application Submitted",
+              text: "Your rider request has been sent successfully.",
+            });
           }
-          // navigate("/dashBoard/riderApprovial");
-          Swal.fire({
-            title: `${res.data.insertedId}`,
-            text: "Your file has been Send.",
-            icon: "success",
-          });
         });
       }
     });
@@ -59,14 +61,26 @@ const BeARider = () => {
             <div className="">
               <h1>Rider Details</h1>
               <fieldset className="fieldset ">
-                <label className="label">RiderEmail</label>
-                <input
-                  type="email"
-                  className="input w-full"
-                  placeholder="SenderEmail"
-                  defaultValue={user.email}
-                  {...register("riderEmail")}
-                />
+                <fieldset className="btn-disabled">
+                  <label className="label">RiderName</label>
+                  <input
+                    type="text"
+                    className="input w-full "
+                    placeholder="RiderName"
+                    defaultValue={user.displayName}
+                    {...register("riderName")}
+                  />
+                </fieldset>
+                <fieldset className=" btn-disabled">
+                  <label className="label">RiderEmail</label>
+                  <input
+                    type="email"
+                    className="input w-full"
+                    placeholder="SenderEmail"
+                    defaultValue={user.email}
+                    {...register("riderEmail")}
+                  />
+                </fieldset>
                 <fieldset>
                   <label className="label">Phone number</label>
 
@@ -121,7 +135,6 @@ const BeARider = () => {
           value="BeARider"
           type="submit"
         />
-        {towRiderError ? <h1>{towRiderError}</h1> :""}
       </form>
     </div>
   );

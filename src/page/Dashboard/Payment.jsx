@@ -19,11 +19,12 @@ const Payment = () => {
       cost: parcel.cost,
       senderEmail: parcel.senderEmail,
       parcel_Id: parcel._id,
+      trackingId: parcel.trackingId,
     };
     const res = await axious.post("/create-checkout-session", paymentInfo);
     window.location.href = res.data.url;
   };
-  return ( 
+  return (
     <div>
       <p>
         parcel name : {parcel.parcel_name} cost : {parcel.cost}

@@ -118,29 +118,12 @@ const SendAPersel = () => {
                 <label className="label">Parcel weight</label>
                 <input
                   type="email"
-                  className="input w-full"
+                  className="input w-full disabled:"
                   placeholder="SenderEmail"
                   defaultValue={user.email}
                   {...register("senderEmail")}
                 />
                 <label className="label">SenderEmail</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="parcel weight"
-                />
-                <label className="label">Parcel weight</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="parcel weight"
-                />
-                <label className="label">Parcel weight</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="parcel weight"
-                />
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend  ">select region</legend>
                   <select
@@ -178,30 +161,14 @@ const SendAPersel = () => {
             <div className="">
               <h1>Reciver Details</h1>
               <fieldset className="fieldset ">
-                <label className="label">Parcel weight</label>
+                <label className="label">Recever Email</label>
                 <input
-                  type="number"
+                  type="email"
                   className="input w-full"
                   placeholder="parcel weight"
+                  {...register("ReceverEmail")}
                 />
-                <label className="label">Parcel weight</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="parcel weight"
-                />
-                <label className="label">Parcel weight</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="parcel weight"
-                />
-                <label className="label">Parcel weight</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  placeholder="parcel weight"
-                />
+
                 <fieldset className="fieldset">
                   <legend className="fieldset-legend  ">
                     select Resive Region

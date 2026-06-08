@@ -52,6 +52,10 @@ export default function AllParcel() {
               <th>Id</th>
               <th>SenderEmail</th>
               <th>Payment status</th>
+              <th>DeliveryStatus</th>
+              <th>TreckingId</th>
+              <th>PaymentId</th>
+              <th>TreckingId</th>
               <th>createdAt</th>
               <th>Actions</th>
             </tr>
@@ -73,6 +77,9 @@ export default function AllParcel() {
                       </Link>
                     )}
                   </td>
+                  <td>{item.deliveryStatus}</td>
+                  <td>{item.trackingId}</td>
+                  <td>{item.paymentId}</td>
                   <td>{item.createdAt}</td>
                   <td>
                     <button className="p-4 rounded-md hover:bg-red-500">

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import useAxious from "../../../allHooks/useAxious";
-import useData from "../../../allHooks/useData";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FiShieldOff } from "react-icons/fi";
 import { FaUserShield } from "react-icons/fa";
@@ -9,11 +8,11 @@ import { MdElectricBike } from "react-icons/md";
 import Swal from "sweetalert2";
 const UserManegment = () => {
   const axiousSecure = useAxious();
-  const { user } = useData();
+  const [inputSearch, setinputSearch] = useState("");
   const { data: users = [], refetch } = useQuery({
-    queryKey: ["users", user],
+    queryKey: ["users", inputSearch],
     queryFn: async () => {
-      const res = await axiousSecure.get("/users");
+      const res = await axiousSecure.get(`/users?searchText=${inputSearch}`);
       console.log(res.data);
       return res.data;
     },
@@ -50,6 +49,26 @@ const UserManegment = () => {
   return (
     <div>
       <h1>users : {users.length}</h1>
+      <label className="input">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        
+        <input onChange={e=>setinputSearch(e.target.value)} type="search" className="grow" placeholder="Search" />
+      </label>
       <div>
         <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
           <table className="table">

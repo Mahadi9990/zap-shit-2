@@ -10,6 +10,7 @@ function PrivateRoute({ children }) {
   if (loading) {
     return <span>Loading...</span>;
   }
+ 
 
   // 🔒 Not logged in → redirect
   if (!user) {
@@ -21,7 +22,7 @@ function PrivateRoute({ children }) {
       />
     );
   }
-
+ 
   // ✅ Authorized
   return children;
 }
